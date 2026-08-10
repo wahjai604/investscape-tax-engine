@@ -1,4 +1,4 @@
-import { mortgageInterest } from "../../src/tax/mortgageInterest";
+import { mortgageInterest } from "../../src/tax/E49-mortgage-interest";
 import {
   canadaYear1Monthly,
   usYear1Monthly,

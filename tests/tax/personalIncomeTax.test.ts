@@ -1,4 +1,4 @@
-import { personalIncomeTax } from "../../src/tax/personalIncomeTax";
+import { personalIncomeTax } from "../../src/tax/E47-personal-income-tax";
 import {
   canadaBcPositiveIncome,
   usAzMarriedFilingJointly,

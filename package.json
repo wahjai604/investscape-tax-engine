@@ -1,10 +1,10 @@
 {
-  "name": "investscape-tax-engine",
+  "name": "@investscape/tax-engine",
   "version": "1.0.0",
   "description": "InvestScape Tax Calculation Engines (E46-E53)",
   "license": "SEE LICENSE IN LICENSE.md",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/tax/index.js",
+  "types": "dist/tax/index.d.ts",
   "scripts": {
     "build": "tsc",
     "test": "jest",

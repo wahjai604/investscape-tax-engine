@@ -1,4 +1,4 @@
-import { passiveActivityLoss } from "../../src/tax/passiveActivityLoss";
+import { passiveActivityLoss } from "../../src/tax/E53-passive-activity-loss";
 import {
   noExceptionRentalLoss,
   materialParticipantUnderLimit,

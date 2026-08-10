@@ -1,4 +1,4 @@
-import { taxAggregation } from "../../src/tax/taxAggregation";
+import { taxAggregation } from "../../src/tax/E46-tax-aggregation";
 import {
   canadaPositiveIncome,
   canadaCcaLossRestriction,

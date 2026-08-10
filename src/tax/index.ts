@@ -10,14 +10,14 @@
  * Contact: licensing@investscape.com
  */
 
-export { taxAggregation } from "./taxAggregation";
-export { personalIncomeTax } from "./personalIncomeTax";
-export { depreciation } from "./depreciation";
-export { mortgageInterest } from "./mortgageInterest";
-export { operatingExpense } from "./operatingExpense";
-export { developerProfit } from "./developerProfit";
-export { gstHstDevCharges } from "./gstHstDevCharges";
-export { passiveActivityLoss } from "./passiveActivityLoss";
+export { taxAggregation } from "./E46-tax-aggregation";
+export { personalIncomeTax } from "./E47-personal-income-tax";
+export { depreciation } from "./E48-depreciation";
+export { mortgageInterest } from "./E49-mortgage-interest";
+export { operatingExpense } from "./E50-operating-expense";
+export { developerProfit } from "./E51-developer-profit";
+export { gstHstDevCharges } from "./E52-gst-hst-dev-charges";
+export { passiveActivityLoss } from "./E53-passive-activity-loss";
 export type {
   TaxAggregationInput,
   TaxAggregationOutput,
