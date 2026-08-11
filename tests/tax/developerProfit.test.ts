@@ -1,4 +1,4 @@
-import { developerProfit } from "../../src/tax/E51-developer-profit";
+import { developerProfit } from "../../src/E51-developer-profit";
 import {
   caOntario8UnitProject,
   usArizonaSingleFamily,

@@ -1,4 +1,4 @@
-import type { PersonalIncomeTaxInput } from "../../../src/tax/taxTypes";
+import type { PersonalIncomeTaxInput } from "../../../src/taxTypes";
 
 export const canadaBcPositiveIncome: PersonalIncomeTaxInput = {
   totalIncome: 84000,

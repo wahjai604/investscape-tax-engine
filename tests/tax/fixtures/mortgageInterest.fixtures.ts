@@ -1,4 +1,4 @@
-import type { MortgageInterestInput } from "../../../src/tax/taxTypes";
+import type { MortgageInterestInput } from "../../../src/taxTypes";
 
 export const canadaYear1Monthly: MortgageInterestInput = {
   jurisdiction: "CA",

@@ -1,4 +1,4 @@
-import type { DepreciationInput } from "../../../src/tax/taxTypes";
+import type { DepreciationInput } from "../../../src/taxTypes";
 
 export const canadaYear1Acquisition: DepreciationInput = {
   jurisdiction: "CA",

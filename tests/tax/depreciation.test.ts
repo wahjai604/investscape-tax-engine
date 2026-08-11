@@ -1,4 +1,4 @@
-import { depreciation } from "../../src/tax/E48-depreciation";
+import { depreciation } from "../../src/E48-depreciation";
 import {
   canadaYear1Acquisition,
   canadaYear3WithSale,

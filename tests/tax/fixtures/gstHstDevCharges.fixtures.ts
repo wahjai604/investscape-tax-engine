@@ -1,4 +1,4 @@
-import type { GstHstDevChargesInput } from "../../../src/tax/taxTypes";
+import type { GstHstDevChargesInput } from "../../../src/taxTypes";
 
 export const onTorontoRegisteredResidential: GstHstDevChargesInput = {
   jurisdiction: "CA",

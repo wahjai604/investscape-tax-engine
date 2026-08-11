@@ -1,4 +1,4 @@
-import type { TaxAggregationInput } from "../../../src/tax/taxTypes";
+import type { TaxAggregationInput } from "../../../src/taxTypes";
 
 export const canadaPositiveIncome: TaxAggregationInput = {
   properties: [

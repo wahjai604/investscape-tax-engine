@@ -1,4 +1,4 @@
-import { operatingExpense } from "../../src/tax/E50-operating-expense";
+import { operatingExpense } from "../../src/E50-operating-expense";
 import {
   caClearDeductibleVsCapitalized,
   usMixedWithReviewFlag,

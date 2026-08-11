@@ -1,4 +1,4 @@
-import type { DeveloperProfitInput } from "../../../src/tax/taxTypes";
+import type { DeveloperProfitInput } from "../../../src/taxTypes";
 
 export const caOntario8UnitProject: DeveloperProfitInput = {
   jurisdiction: "CA",

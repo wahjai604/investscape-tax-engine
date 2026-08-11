@@ -1,4 +1,4 @@
-import type { OperatingExpenseInput } from "../../../src/tax/taxTypes";
+import type { OperatingExpenseInput } from "../../../src/taxTypes";
 
 export const caClearDeductibleVsCapitalized: OperatingExpenseInput = {
   jurisdiction: "CA",

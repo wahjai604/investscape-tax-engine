@@ -1,4 +1,4 @@
-import { gstHstDevCharges } from "../../src/tax/E52-gst-hst-dev-charges";
+import { gstHstDevCharges } from "../../src/E52-gst-hst-dev-charges";
 import {
   onTorontoRegisteredResidential,
   bcVancouverUnregisteredResidential,

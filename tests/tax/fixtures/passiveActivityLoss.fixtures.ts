@@ -1,4 +1,4 @@
-import type { PassiveActivityLossInput } from "../../../src/tax/taxTypes";
+import type { PassiveActivityLossInput } from "../../../src/taxTypes";
 
 export const noExceptionRentalLoss: PassiveActivityLossInput = {
   jurisdiction: "US",
