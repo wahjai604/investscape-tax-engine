@@ -21,6 +21,13 @@ export { passiveActivityLoss } from "./E53-passive-activity-loss";
 export { section1031Exchange } from "./E68-section-1031-exchange";
 export { costSegregation } from "./E69-cost-segregation";
 export { opportunityZones } from "./E70-opportunity-zones";
+
+// Phase 2 scaffolds (typed contracts only — not implemented, not
+// E-numbered; every function below throws immediately when called). See
+// phase2-scaffolds-international.ts's own doc comment for what's actually
+// blocking each of the three functions — they are not equally deferred.
+export * from "./phase2-scaffolds-international";
+
 export type {
   TaxAggregationInput,
   TaxAggregationOutput,
