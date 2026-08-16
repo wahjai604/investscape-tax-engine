@@ -1,7 +1,7 @@
 {
   "name": "@investscape/tax-engine",
   "version": "1.0.0",
-  "description": "InvestScape Tax Calculation Engines (E46-E53)",
+  "description": "InvestScape Tax Calculation Engines (E46-E53, E68-E70)",
   "license": "SEE LICENSE IN LICENSE.md",
   "main": "./dist/umd/investscape-tax-engine.umd.js",
   "module": "./dist/esm/index.js",

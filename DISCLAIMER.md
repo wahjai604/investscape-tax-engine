@@ -1,6 +1,6 @@
 # Legal Disclaimers
 
-**InvestScape Tax Engine (E46–E53)**
+**InvestScape Tax Engine (E46–E53, E68–E70)**
 
 © 2026 Lighthouse Research Ltd. DBA InvestScape. All rights reserved.
 
@@ -60,6 +60,8 @@ This library deliberately **throws a clear error rather than silently guessing**
 | **E52 GST/HST & Dev Charges** | GST/HST rate | **All 10 Canadian provinces** — this is a fixed rate table, not a lookup gap. |
 | **E52 GST/HST & Dev Charges** | Development-charge *default* (only used if you don't supply `devChargeRatePerUnit` yourself) | Several major municipalities (Toronto, Vancouver, Calgary, Edmonton, Montreal, Winnipeg) plus a province-level fallback for most provinces. Saskatchewan has no verified default and will throw unless you pass a rate explicitly. |
 | **E46, E48, E49, E50, E51, E53** | N/A — these engines don't do province/state-specific rate lookups | Operate uniformly across `jurisdiction: "CA" \| "US"`; province/state fields (where present) are contextual only. |
+| **E69 Cost Segregation** | Reclassification benchmark default | **long_term_rental and short_term_rental only.** `commercial` has no verified benchmark and throws unless a real cost segregation study is supplied via `customFiveYearPercent`/`customFifteenYearPercent`. |
+| **E68, E70** | N/A — US-only, no sub-jurisdiction lookups | Take `jurisdiction: "US"` only; no Canadian equivalent exists for like-kind exchanges or Opportunity Zones. |
 
 **If you operate in a jurisdiction not covered above for E47 or E52's dev-charge defaults, the Software will throw a clear error. Do not work around that error by guessing a substitute rate without professional verification.**
 
@@ -131,9 +133,20 @@ However:
 
 ---
 
+## US Tax Strategies (E68–E70) Disclaimer
+
+**Opportunity Zone rules changed materially in 2026 legislation (OBBBA) and may change again.** See `docs/US-TAX-STRATEGIES-SOURCES.md` for every sourced figure these three engines use, with citations and an "as of August 2026" freshness note.
+
+1. **E68 Section 1031 Exchange** does not model reverse exchanges, improvement exchanges, or the cash-can-offset-debt-boot nuance real IRS practice allows (Treas. Reg. §1.1031(b)-1) — `bootAmount` treats an unreinvested-equity shortfall and an under-replaced-debt shortfall as independent, which can overstate boot versus a real exchange structured with offsetting cash. A qualified intermediary must be engaged for any real 1031 exchange; this Software does not act as one.
+2. **E69 Cost Segregation** benchmark defaults are national industry medians, not a substitute for an engineering-based cost segregation study of the specific property. `commercial` property has no verified benchmark and requires a real study's numbers as a custom override.
+3. **E70 Opportunity Zones** requires the caller to supply `regime` explicitly (`legacy_2017` or `permanent_2026`); the Software never infers regime from the current date. Getting this input wrong (e.g., applying the permanent regime's rolling deferral to an investment actually governed by the fixed 2026-12-31 legacy deadline) will produce an incorrect deferral date — verify the investment's actual governing regime with a tax professional before use.
+4. None of E68–E70 model state-level tax treatment, entity-structure effects (LLC, partnership, REIT), or Alternative Minimum Tax interactions.
+
+---
+
 ## Accuracy Not Guaranteed
 
-**While the Software is tested (100% code coverage, 125 tests as of this writing), it is not guaranteed to be accurate for:**
+**While the Software is tested (100% code coverage, 157 tests as of this writing), it is not guaranteed to be accurate for:**
 
 1. Edge cases (unusual property types, unusual financing)
 2. Multi-property portfolios with complex interdependencies
@@ -192,6 +205,6 @@ For questions about these disclaimers or the Software's accuracy:
 
 ---
 
-**Last Updated:** August 8, 2026
+**Last Updated:** August 15, 2026
 
 **© 2026 Lighthouse Research Ltd. DBA InvestScape. All rights reserved.**

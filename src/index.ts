@@ -18,6 +18,9 @@ export { operatingExpense } from "./E50-operating-expense";
 export { developerProfit } from "./E51-developer-profit";
 export { gstHstDevCharges } from "./E52-gst-hst-dev-charges";
 export { passiveActivityLoss } from "./E53-passive-activity-loss";
+export { section1031Exchange } from "./E68-section-1031-exchange";
+export { costSegregation } from "./E69-cost-segregation";
+export { opportunityZones } from "./E70-opportunity-zones";
 export type {
   TaxAggregationInput,
   TaxAggregationOutput,
@@ -56,4 +59,12 @@ export type {
   PassiveActivityLossInput,
   PassiveActivityLossHarvestingAnalysis,
   PassiveActivityLossOutput,
+  Section1031Input,
+  Section1031Result,
+  CostSegregationPropertyUse,
+  CostSegregationInput,
+  CostSegregationResult,
+  OpportunityZoneRegime,
+  OpportunityZoneInput,
+  OpportunityZoneResult,
 } from "./taxTypes";

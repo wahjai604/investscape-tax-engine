@@ -512,3 +512,138 @@ export interface PassiveActivityLossOutput {
 
   disclaimer: string;
 }
+
+// -----------------------------------------------------------------------
+// E68: Section 1031 Like-Kind Exchange (US only — no Canadian equivalent)
+// -----------------------------------------------------------------------
+
+export interface Section1031Input {
+  jurisdiction: "US";
+
+  relinquishedSalePrice: number;
+  /** ISO "YYYY-MM-DD". Both deadlines below run from this date. */
+  relinquishedClosingDate: string;
+  /** Adjusted cost basis of the relinquished property immediately before sale — needed to compute realized gain. */
+  relinquishedAdjustedBasis: number;
+  /** Portion of relinquishedAdjustedBasis attributable to cumulative depreciation taken; tracked separately from capital gain per IRC §1250/§1245 recapture rules. */
+  accumulatedDepreciation: number;
+
+  replacementPropertyPrice: number;
+  relinquishedDebtPayoff: number;
+  replacementDebtAmount: number;
+
+  /** ISO "YYYY-MM-DD", including extensions. Caps the 180-day exchange deadline when earlier. */
+  taxReturnDueDate: string;
+}
+
+export interface Section1031Result {
+  /** relinquishedClosingDate + 45 calendar days. Never shifted for weekends/holidays. */
+  identificationDeadline: string;
+  /** Earlier of (relinquishedClosingDate + 180 calendar days) and taxReturnDueDate — the two run concurrently, not sequentially from the identification deadline. */
+  exchangeDeadline: string;
+
+  /** Taxable portion: sum of unreinvested net equity and unreplaced debt, each computed independently (neither offsets the other in this model — see docs/US-TAX-STRATEGIES-SOURCES.md). */
+  bootAmount: number;
+  equityShortfall: number;
+  debtShortfall: number;
+
+  realizedGain: number;
+  /** Portion of realizedGain taxed this year because boot exceeds full deferral capacity. */
+  recognizedGain: number;
+  recognizedDepreciationRecapture: number;
+  recognizedCapitalGain: number;
+
+  deferredCapitalGain: number;
+  /** Tracked separately from deferredCapitalGain — a 1031 defers depreciation recapture too, not just capital gains. */
+  deferredDepreciationRecapture: number;
+
+  jurisdiction: "US";
+  calculatedAt: string;
+  inputs: Section1031Input;
+
+  issues: string[];
+  disclaimer: string;
+}
+
+// -----------------------------------------------------------------------
+// E69: Cost Segregation (US only — MACRS accelerated categories have no Canadian CCA equivalent)
+// -----------------------------------------------------------------------
+
+export type CostSegregationPropertyUse =
+  | "long_term_rental"
+  | "short_term_rental"
+  | "commercial";
+
+export interface CostSegregationInput {
+  jurisdiction: "US";
+  totalBuildingCostBasis: number;
+  propertyUse: CostSegregationPropertyUse;
+
+  /** When true, applies the property-use benchmark default. When false, customFiveYearPercent/customFifteenYearPercent are required. */
+  useBenchmarkDefault: boolean;
+  /** 0-1 fraction. From the investor's own cost segregation study; overrides the benchmark default when supplied. */
+  customFiveYearPercent?: number;
+  /** 0-1 fraction. From the investor's own cost segregation study; overrides the benchmark default when supplied. */
+  customFifteenYearPercent?: number;
+}
+
+export interface CostSegregationResult {
+  fiveYearReclassified: number;
+  fifteenYearReclassified: number;
+  remainingStraightLine: number;
+
+  /** 0-1 fractions. median is the property-use benchmark default actually applied (or the custom total, when overridden); low/high are the published range this default was drawn from — see docs/US-TAX-STRATEGIES-SOURCES.md for how the range is composed. */
+  benchmarkRangeUsed: { low: number; high: number; median: number };
+
+  firstYearAcceleratedDepreciation: number;
+
+  usedCustomOverride: boolean;
+  jurisdiction: "US";
+  calculatedAt: string;
+  inputs: CostSegregationInput;
+
+  disclaimer: string;
+}
+
+// -----------------------------------------------------------------------
+// E70: Opportunity Zones (US only)
+// -----------------------------------------------------------------------
+
+/**
+ * `legacy_2017` = OZ 1.0, investments made under the original 2017 TCJA
+ * regime (pre-2027). `permanent_2026` = OZ 2.0, the permanent post-OBBBA
+ * regime. This must always be supplied explicitly by the caller and is never
+ * inferred from the current date — a real investment made under the old
+ * regime keeps its original fixed deadline even after the new regime exists
+ * and even when this engine is run years later.
+ */
+export type OpportunityZoneRegime = "legacy_2017" | "permanent_2026";
+
+export interface OpportunityZoneInput {
+  jurisdiction: "US";
+  regime: OpportunityZoneRegime;
+  /** ISO "YYYY-MM-DD". Only used for the permanent_2026 rolling deferral; legacy_2017 ignores it in favor of the fixed deadline. */
+  investmentDate: string;
+  isRuralQOZ: boolean;
+
+  originalGainAmount: number;
+  /** 0-1 fraction of the substantial-improvement work completed relative to the applicable threshold's basis requirement. */
+  substantialImprovementCompletedPercent: number;
+}
+
+export interface OpportunityZoneResult {
+  /** legacy_2017: fixed OZ_LEGACY_DEADLINE regardless of investmentDate. permanent_2026: investmentDate + OZ_ROLLING_DEFERRAL_YEARS. */
+  deferralRecognitionDate: string;
+  /** 0-1 fraction. The statutory rate this QOZ category (rural vs. standard) is designed for — see meetsSubstantialImprovementThreshold/issues for whether it's currently substantiated. */
+  basisStepUpPercent: number;
+  meetsSubstantialImprovementThreshold: boolean;
+  /** The threshold basisStepUpPercent/meetsSubstantialImprovementThreshold were evaluated against: OZ_RURAL_IMPROVEMENT_THRESHOLD for rural, OZ_STANDARD_IMPROVEMENT_THRESHOLD otherwise. */
+  applicableImprovementThreshold: number;
+
+  jurisdiction: "US";
+  calculatedAt: string;
+  inputs: OpportunityZoneInput;
+
+  issues: string[];
+  disclaimer: string;
+}
