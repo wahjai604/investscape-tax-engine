@@ -1,6 +1,6 @@
 # Legal Disclaimers
 
-**InvestScape Tax Engine (E46–E53, E68–E70)**
+**InvestScape Tax Engine (E46–E53, E68–E70, E83)**
 
 © 2026 Lighthouse Research Ltd. DBA InvestScape. All rights reserved.
 
@@ -62,6 +62,7 @@ This library deliberately **throws a clear error rather than silently guessing**
 | **E46, E48, E49, E50, E51, E53** | N/A — these engines don't do province/state-specific rate lookups | Operate uniformly across `jurisdiction: "CA" \| "US"`; province/state fields (where present) are contextual only. |
 | **E69 Cost Segregation** | Reclassification benchmark default | **long_term_rental and short_term_rental only.** `commercial` has no verified benchmark and throws unless a real cost segregation study is supplied via `customFiveYearPercent`/`customFifteenYearPercent`. |
 | **E68, E70** | N/A — US-only, no sub-jurisdiction lookups | Take `jurisdiction: "US"` only; no Canadian equivalent exists for like-kind exchanges or Opportunity Zones. |
+| **E83 Cross-Border Withholding** | N/A — scoped to Canada <-> US only | Covers only `investorHomeCountry`/`propertyCountry` combinations of `"Canada"` and `"US"`. Does not model UK, Australia, or any other jurisdiction (see `phase2-scaffolds-international.ts` for the go-to-market-blocked UK/Australia scaffolds). |
 
 **If you operate in a jurisdiction not covered above for E47 or E52's dev-charge defaults, the Software will throw a clear error. Do not work around that error by guessing a substitute rate without professional verification.**
 
@@ -128,7 +129,7 @@ However:
 
 1. **§1250 recapture** (US) assumes the 25% federal cap; state recapture rates are not applied.
 2. **Canada CCA recapture** is treated as fully ordinary income taxed at the investor's marginal rate; no special capital-gains treatment is modeled.
-3. **FIRPTA** (foreign investor withholding rules) is not modeled.
+3. **FIRPTA** (foreign investor withholding rules) — now modeled separately by E83 (`calculateCrossBorderWithholding`), not by E48. E48's depreciation/recapture output does not itself incorporate FIRPTA withholding.
 4. **Installment sale rules** (§453) are not modeled for deferred gain recognition.
 
 ---
@@ -144,9 +145,21 @@ However:
 
 ---
 
+## Cross-Border Withholding (E83) Disclaimer
+
+**Scoped to Canada <-> US only.** See `docs/CROSS-BORDER-WITHHOLDING-SOURCES.md` for every sourced rate and threshold these four regimes (FIRPTA, Section 116, Part XIII, §871(d)/Section 216) use, with citations and an "as of August 2026" freshness note.
+
+1. **`foreignTaxCreditEligible` is a principle-level flag, not a computed credit amount** — it reports whether the withheld tax is, in principle, creditable under domestic FTC rules and the Canada-US Tax Treaty, not an actual dollar credit.
+2. **`fullyOffsetsDoubleTaxation` is always `false`.** Actual double-tax relief depends on the investor's home-country tax liability on the same income, treaty sourcing rules, and domestic FTC limitation mechanics (US Form 1116 categories, Canadian federal+provincial limits) — none of which this engine computes. Treat every result's `issues[]` entry on this point as a real, unresolved gap, not boilerplate.
+3. **Certificate/election paths (Form 8288-B, Section 116 clearance certificate, Section 216 election, §871(d) election) are approximated**, not computed the way the IRS/CRA would compute them — see the sources doc for exactly what's simplified in each case.
+4. **The buyer's residence intent (FIRPTA's reduced/zero-rate tiers) is taken as a caller-supplied boolean**, not independently evaluated against the IRC §1445(b)(5) 50%-use test.
+5. E83 does not model state/provincial-level withholding, entity-structure effects, or any jurisdiction outside Canada/US (see "Jurisdictional Coverage" above).
+
+---
+
 ## Accuracy Not Guaranteed
 
-**While the Software is tested (100% code coverage, 157 tests as of this writing), it is not guaranteed to be accurate for:**
+**While the Software is tested (100% code coverage, 180 tests as of this writing), it is not guaranteed to be accurate for:**
 
 1. Edge cases (unusual property types, unusual financing)
 2. Multi-property portfolios with complex interdependencies

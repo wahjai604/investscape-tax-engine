@@ -15,6 +15,12 @@
  * Exchange, Cost Segregation, Opportunity Zones). Every sourced figure here
  * is documented, with citations, in docs/US-TAX-STRATEGIES-SOURCES.md — this
  * file holds only the values, not the rationale.
+ *
+ * The E83 Cross-Border Withholding constants below are documented, with
+ * citations, in docs/CROSS-BORDER-WITHHOLDING-SOURCES.md instead — kept as a
+ * separate sources doc because the FIRPTA/Section 116/Part XIII/871(d)
+ * citations are statute + IRS/CRA guidance, not the industry-benchmark and
+ * IRC-section sources the US-only doc covers.
  */
 
 // ---------------------------------------------------------------------------
@@ -64,3 +70,25 @@ export const OZ_RURAL_STEPUP = 0.3;
 
 export const OZ_STANDARD_IMPROVEMENT_THRESHOLD = 1.0;
 export const OZ_RURAL_IMPROVEMENT_THRESHOLD = 0.5;
+
+// ---------------------------------------------------------------------------
+// E83: Cross-Border Withholding (Canada <-> US)
+// ---------------------------------------------------------------------------
+
+/** IRC §1445(a) — standard FIRPTA withholding rate on the amount realized (gross), US property sold by a non-resident. */
+export const FIRPTA_STANDARD_WITHHOLDING_RATE = 0.15;
+/** IRC §1445(b)(5)/(c)(4) — reduced rate when amount realized is $300,001-$1,000,000 and the buyer intends residential use. */
+export const FIRPTA_REDUCED_WITHHOLDING_RATE = 0.1;
+/** IRC §1445(b)(5) residence exception threshold — at or below this amount realized, withholding is 0% when the buyer intends residential use. */
+export const FIRPTA_RESIDENCE_EXEMPTION_THRESHOLD = 300000;
+/** IRC §1445(c)(4) upper bound of the 10% reduced-rate band; above this, the standard 15% rate applies regardless of buyer intent. */
+export const FIRPTA_REDUCED_RATE_UPPER_THRESHOLD = 1000000;
+
+/** ITA §116 — non-resident withholding on disposition of taxable Canadian property, gross proceeds, absent a clearance certificate. */
+export const SECTION_116_WITHHOLDING_RATE = 0.25;
+
+/** ITA Part XIII — non-resident withholding on gross rental income from Canadian real property, absent a Section 216 election. */
+export const PART_XIII_WITHHOLDING_RATE = 0.25;
+
+/** IRC §871(a)/(d) default — FDAP withholding on gross US-source rental income paid to a nonresident alien, absent a §871(d) net-income election. */
+export const US_FDAP_RENTAL_WITHHOLDING_RATE = 0.3;

@@ -647,3 +647,96 @@ export interface OpportunityZoneResult {
   issues: string[];
   disclaimer: string;
 }
+
+// -----------------------------------------------------------------------
+// E83: Cross-Border Withholding (Canada <-> US only)
+// -----------------------------------------------------------------------
+
+/**
+ * `sale_proceeds` triggers FIRPTA (US property) or Section 116 (Canadian
+ * property); `rental_income` triggers §871(d)/FDAP (US property) or Part
+ * XIII/Section 216 (Canadian property). See
+ * docs/CROSS-BORDER-WITHHOLDING-SOURCES.md for the statute/guidance behind
+ * each regime.
+ */
+export type CrossBorderTransactionType = "rental_income" | "sale_proceeds";
+
+export interface CrossBorderWithholdingRequest {
+  investorHomeCountry: "Canada" | "US";
+  propertyCountry: "Canada" | "US";
+  transactionType: CrossBorderTransactionType;
+  /** Gross sale proceeds (sale_proceeds) or gross rental income (rental_income) — the default withholding base before any election/certificate. */
+  grossAmount: number;
+
+  /**
+   * FIRPTA only (US property, sale_proceeds). Whether the *buyer* intends to
+   * use the property as a residence (IRC §1445(b)(5) 50%-use test) — this is
+   * a fact about the buyer, not the investor/seller, and only matters for
+   * the US-property sale case. Ignored for every other directional case.
+   */
+  buyerIntendsUseAsResidence?: boolean;
+
+  /**
+   * Whether the investor has obtained (or is applying the withholding basis
+   * of) the relevant pre-closing certificate or net-income election:
+   * Form 8288-B (FIRPTA sale), a Section 116 clearance certificate
+   * (Canadian property sale), the §871(d) net-income election (US rental),
+   * or a Section 216 election (Canadian rental). When true,
+   * `estimatedGainOrNetIncome` must be supplied.
+   */
+  useNetBasisElectionOrCertificate?: boolean;
+
+  /**
+   * Required when `useNetBasisElectionOrCertificate` is true. For
+   * sale_proceeds: the estimated capital gain the certificate's withholding
+   * is calculated against (not gross proceeds). For rental_income: the
+   * estimated net rental income after expenses the election's graduated-rate
+   * tax is calculated against (not gross rent).
+   */
+  estimatedGainOrNetIncome?: number;
+
+  /**
+   * Required when `useNetBasisElectionOrCertificate` is true AND
+   * transactionType is "rental_income" (the §871(d)/Section 216 net-income
+   * elections tax net income at graduated resident-style rates, which this
+   * engine approximates with a single supplied marginal rate rather than
+   * modeling either country's full bracket schedule for a non-resident
+   * filer — see docs/CROSS-BORDER-WITHHOLDING-SOURCES.md).
+   */
+  investorMarginalTaxRate?: number;
+}
+
+export interface CrossBorderWithholdingResult {
+  /** The statutory or elected rate actually applied to `withholdingBasisAmount` below. */
+  withholdingRate: number;
+  withholdingAmount: number;
+  /** The dollar amount `withholdingRate` was applied to — grossAmount by default, or estimatedGainOrNetIncome when a certificate/election was used. */
+  withholdingBasisAmount: number;
+  /** True when withholdingBasisAmount came from estimatedGainOrNetIncome (a certificate or net-income election) rather than the gross default. */
+  usedElectionOrCertificate: boolean;
+
+  /**
+   * Whether the withheld amount is, in principle, a creditable foreign
+   * income tax under the Canada-US Tax Treaty and each country's own
+   * domestic foreign-tax-credit rules (IRC §901 / ITA §126). This is a
+   * principle-level eligibility flag, not a computed credit amount.
+   */
+  foreignTaxCreditEligible: boolean;
+  /**
+   * Whether the foreign tax credit fully eliminates double taxation on this
+   * transaction. This engine does NOT model the investor's home-country tax
+   * liability on the same income, treaty sourcing rules, or domestic FTC
+   * limitation mechanics (US Form 1116 / Canadian federal + provincial FTC
+   * limits) — so this is deliberately conservative rather than computed; see
+   * `issues` for the specific gap and docs/CROSS-BORDER-WITHHOLDING-SOURCES.md.
+   */
+  fullyOffsetsDoubleTaxation: boolean;
+
+  regime: "FIRPTA" | "SECTION_116" | "PART_XIII_SECTION_216" | "FDAP_871D" | "NOT_APPLICABLE";
+  jurisdiction: "CA" | "US" | "CROSS_BORDER";
+  calculatedAt: string;
+  inputs: CrossBorderWithholdingRequest;
+
+  issues: string[];
+  disclaimer: string;
+}

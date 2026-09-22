@@ -22,17 +22,12 @@
  * instructed otherwise." — followed literally below, for every function
  * in this file.
  *
- * The three contracts below are NOT equally deferred, and that
- * distinction matters for whoever picks this file up next:
+ * calculateCrossBorderWithholding used to live here (Canada <-> US
+ * withholding — FIRPTA / Section 116 / Part XIII / §871(d)) but has since
+ * been built for real; see E83-cross-border-withholding.ts. It was smaller
+ * in surface area and not blocked on any go-to-market decision, unlike the
+ * two functions remaining below:
  *
- * - calculateCrossBorderWithholding is scoped to Canada <-> US only —
- *   the two jurisdictions this codebase already fully supports
- *   (jurisdiction: "CA" | "US" throughout E46-E53, E68-E70). It's smaller
- *   in surface area and more immediately relevant, since it touches
- *   investors this app already serves today. It is simply not built yet —
- *   there is no go-to-market blocker on it, only unbuilt engineering work
- *   (real US/Canada tax-treaty withholding-rate tables and foreign-tax-
- *   credit offset rules).
  * - calculateUKPropertyTax and calculateAustraliaPropertyTax are a
  *   materially bigger lift: entirely new jurisdictions this codebase has
  *   never modeled (new tax regimes, new currencies, new property-tax
@@ -42,21 +37,6 @@
  *   actually expand into UK/Australia) as much as on engineering time —
  *   do not treat them as "the same kind of gap, just two more countries."
  */
-
-export interface CrossBorderWithholdingRequest {
-  investorHomeCountry: "Canada" | "US";
-  propertyCountry: "Canada" | "US";
-  transactionType: "rental_income" | "sale_proceeds";
-  grossAmount: number;
-}
-
-export interface CrossBorderWithholdingResult {
-  withholdingRate: number;
-  withholdingAmount: number;
-  foreignTaxCreditEligible: boolean;
-  fullyOffsetsDoubleTaxation: boolean;
-  issues: string[];
-}
 
 export interface UKPropertyTaxRequest {
   country: "England" | "Wales" | "Scotland" | "Northern Ireland";
@@ -86,19 +66,6 @@ export interface AustraliaPropertyTaxResult {
   cgtTreatment: "flat_50_discount" | "indexed_with_30pct_minimum";
   stampDuty: number;
   issues: string[];
-}
-
-/**
- * Not implemented — unbuilt, not go-to-market-blocked (see file header).
- * Throws immediately so an accidental call surfaces loudly rather than
- * silently returning a fabricated withholding amount.
- */
-export function calculateCrossBorderWithholding(
-  _r: CrossBorderWithholdingRequest
-): CrossBorderWithholdingResult {
-  throw new Error(
-    "Phase 2 not implemented. See International Engine Master Spec in the project vault."
-  );
 }
 
 /**

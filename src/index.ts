@@ -21,11 +21,12 @@ export { passiveActivityLoss } from "./E53-passive-activity-loss";
 export { section1031Exchange } from "./E68-section-1031-exchange";
 export { costSegregation } from "./E69-cost-segregation";
 export { opportunityZones } from "./E70-opportunity-zones";
+export { calculateCrossBorderWithholding } from "./E83-cross-border-withholding";
 
 // Phase 2 scaffolds (typed contracts only — not implemented, not
 // E-numbered; every function below throws immediately when called). See
 // phase2-scaffolds-international.ts's own doc comment for what's actually
-// blocking each of the three functions — they are not equally deferred.
+// blocking each of the two remaining functions.
 export * from "./phase2-scaffolds-international";
 
 export type {
@@ -74,4 +75,7 @@ export type {
   OpportunityZoneRegime,
   OpportunityZoneInput,
   OpportunityZoneResult,
+  CrossBorderTransactionType,
+  CrossBorderWithholdingRequest,
+  CrossBorderWithholdingResult,
 } from "./taxTypes";
